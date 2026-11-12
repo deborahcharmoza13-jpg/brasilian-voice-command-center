@@ -2,7 +2,7 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 
 export type CoreState = "repouso" | "ouvindo" | "processando" | "falando";
 export type Engine = "Gemini" | "Qwen";
-export type Task = { id: number; title: string; done: boolean; tag: string };
+export type Task = { id: number; title: string; done: boolean; tag: string; priority: "alta" | "média" | "baixa" };
 export type Memory = { id: number; text: string; status: "pendente" | "aprovada" | "rejeitada" };
 export type Msg = { from: "user" | "jarvis"; text: string; time: string };
 export type Activity = { text: string; time: string };
@@ -14,10 +14,10 @@ function useJarvisState() {
   const [core, setCore] = useState<CoreState>("repouso");
   const [engine, setEngine] = useState<Engine>("Gemini");
   const [tasks, setTasks] = useState<Task[]>([
-    { id: 1, title: "Revisar arquitetura do módulo de voz", done: false, tag: "JARVIS" },
-    { id: 2, title: "Escrever roteiro do Protocolo IA Dominante — ep. 3", done: false, tag: "Protocolo" },
-    { id: 3, title: "Testar troca de mecanismo Gemini/Qwen", done: true, tag: "JARVIS" },
-    { id: 4, title: "Organizar notas da semana", done: false, tag: "Pessoal" },
+    { id: 1, title: "Revisar arquitetura do módulo de voz", done: false, tag: "JARVIS", priority: "alta" },
+    { id: 2, title: "Escrever roteiro do Protocolo IA Dominante — ep. 3", done: false, tag: "Protocolo", priority: "alta" },
+    { id: 3, title: "Testar troca de mecanismo Gemini/Qwen", done: true, tag: "JARVIS", priority: "média" },
+    { id: 4, title: "Organizar notas da semana", done: false, tag: "Pessoal", priority: "baixa" },
   ]);
   const [memories, setMemories] = useState<Memory[]>([
     { id: 1, text: "Prefere respostas curtas e diretas pela manhã.", status: "pendente" },

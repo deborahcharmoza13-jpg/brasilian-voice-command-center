@@ -18,7 +18,7 @@ function Tarefas() {
   return (
     <>
       <PageTitle kicker="Execução" title="Tarefas"><DemoTag>Salvo só nesta sessão</DemoTag></PageTitle>
-      <form className="glass mb-6 flex items-center gap-2 p-2" onSubmit={(e) => { e.preventDefault(); if (!title.trim()) return; setTasks((t) => [{ id: Date.now(), title: title.trim(), done: false, tag: "Nova" }, ...t]); log("Tarefa adicionada"); setTitle(""); }}>
+      <form className="glass mb-6 flex items-center gap-2 p-2" onSubmit={(e) => { e.preventDefault(); if (!title.trim()) return; setTasks((t) => [{ id: Date.now(), title: title.trim(), done: false, tag: "Nova", priority: "média" }, ...t]); log("Tarefa adicionada"); setTitle(""); }}>
         <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Nova tarefa…" className="flex-1 bg-transparent px-3 py-2 text-sm outline-none placeholder:text-muted-foreground" />
         <button className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm text-primary-foreground"><Plus className="h-4 w-4" />Adicionar</button>
       </form>

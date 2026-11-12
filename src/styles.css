@@ -34,13 +34,15 @@
   --color-warn: var(--warn);
   --color-ok: var(--ok);
   --color-amber: var(--amber);
+  --color-violet: var(--violet);
+  --color-petrol: var(--petrol);
 }
 
 :root {
   --radius: 0.75rem;
-  --background: oklch(0.14 0.025 255);
+  --background: oklch(0.115 0.022 258);
   --foreground: oklch(0.95 0.015 230);
-  --card: oklch(0.19 0.03 252 / 55%);
+  --card: oklch(0.17 0.03 250 / 45%);
   --card-foreground: oklch(0.95 0.015 230);
   --popover: oklch(0.18 0.03 252);
   --popover-foreground: oklch(0.95 0.015 230);
@@ -61,6 +63,8 @@
   --warn: oklch(0.8 0.15 75);
   --ok: oklch(0.78 0.16 160);
   --amber: oklch(0.8 0.14 70);
+  --violet: oklch(0.68 0.16 295);
+  --petrol: oklch(0.42 0.08 215);
 }
 
 @layer base {
@@ -69,14 +73,17 @@
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
     background-image:
-      radial-gradient(ellipse 80% 60% at 60% 30%, oklch(0.3 0.08 240 / 35%), transparent 70%),
-      linear-gradient(oklch(0.82 0.1 220 / 3%) 1px, transparent 1px),
-      linear-gradient(90deg, oklch(0.82 0.1 220 / 3%) 1px, transparent 1px);
-    background-size: 100% 100%, 48px 48px, 48px 48px;
+      radial-gradient(ellipse 55% 45% at 50% 38%, oklch(0.35 0.09 220 / 32%), transparent 70%),
+      radial-gradient(ellipse 40% 50% at 92% 8%, oklch(0.4 0.12 295 / 14%), transparent 70%),
+      radial-gradient(ellipse 60% 40% at 0% 100%, oklch(0.32 0.07 210 / 25%), transparent 70%);
     background-attachment: fixed;
   }
+  ::selection { background: oklch(0.82 0.14 210 / 30%); }
+  ::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 }
+
 
 @utility glass {
   background: var(--card);
@@ -125,3 +132,54 @@
 
 [data-accent="Azul elétrico"] { --primary: oklch(0.72 0.18 255); --glow: oklch(0.72 0.2 255); --ring: oklch(0.72 0.18 255 / 60%); }
 [data-accent="Âmbar"] { --primary: oklch(0.82 0.14 70); --glow: oklch(0.82 0.15 70); --ring: oklch(0.82 0.14 70 / 60%); }
+
+/* ---------- Atmosfera ---------- */
+.atmos::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: linear-gradient(oklch(0.82 0.1 220 / 3.5%) 1px, transparent 1px), linear-gradient(90deg, oklch(0.82 0.1 220 / 3.5%) 1px, transparent 1px);
+  background-size: 64px 64px; mask: radial-gradient(ellipse 70% 60% at 50% 40%, #000 20%, transparent 80%); }
+.atmos::after { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: repeating-linear-gradient(0deg, oklch(1 0 0 / 1.2%) 0 1px, transparent 1px 3px); }
+
+@utility panel {
+  position: relative;
+  background: linear-gradient(160deg, oklch(0.2 0.035 245 / 55%), oklch(0.13 0.025 255 / 40%));
+  border: 1px solid var(--border);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 30px 60px -30px oklch(0 0 0 / 70%), inset 0 1px 0 oklch(1 0 0 / 4%);
+}
+/* cantos técnicos */
+@utility brackets {
+  &::before, &::after { content: ""; position: absolute; width: 10px; height: 10px; pointer-events: none; border-color: color-mix(in oklab, var(--primary) 70%, transparent); }
+  &::before { top: -1px; left: -1px; border-top: 1px solid; border-left: 1px solid; }
+  &::after { bottom: -1px; right: -1px; border-bottom: 1px solid; border-right: 1px solid; }
+}
+@utility hairline { background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 50%, transparent), transparent); height: 1px; }
+@utility micro { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.14em; text-transform: uppercase; color: color-mix(in oklab, var(--muted-foreground) 80%, transparent); }
+@utility lift { transition: transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s, box-shadow .35s;
+  &:hover { transform: translateY(-2px); border-color: color-mix(in oklab, var(--primary) 35%, transparent); box-shadow: 0 30px 60px -30px oklch(0 0 0 / 80%), 0 0 0 1px color-mix(in oklab, var(--primary) 10%, transparent), 0 0 40px -20px var(--glow); } }
+
+/* ---------- Núcleo: camadas extras ---------- */
+.core .vol { position: absolute; inset: -18%; border-radius: 9999px; background: radial-gradient(circle, color-mix(in oklab, var(--c) 22%, transparent) 0%, transparent 60%); filter: blur(20px); transition: background .8s; animation: breathe 5s ease-in-out infinite; }
+.core[data-state="ouvindo"] .vol { animation-duration: 1.6s; }
+.core[data-state="falando"] .vol { animation: speak .45s ease-in-out infinite alternate; }
+.core .r5 { inset: -7%; border: 1px solid color-mix(in oklab, var(--c) 12%, transparent); }
+.core .r5::before { content: ""; position: absolute; top: 50%; left: -3px; width: 5px; height: 5px; border-radius: 9999px; background: var(--c); box-shadow: 0 0 10px var(--c); }
+.core .r5 { animation: spin calc(24s * var(--speed)) linear infinite; }
+.core .r6 { inset: 12%; border: 0; border-top: 1px solid color-mix(in oklab, oklch(0.68 0.16 295) 70%, transparent); animation: spin calc(18s * var(--speed)) linear infinite reverse; }
+.core .r7 { inset: 28%; border: 1px solid transparent; border-top-color: color-mix(in oklab, var(--c) 80%, transparent); animation: spin calc(4s * var(--speed)) linear infinite; }
+.core .arc { position: absolute; inset: -3%; transform: rotate(-90deg); overflow: visible; }
+.core .arc circle { transition: stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1), stroke .6s; }
+.core .cross { position: absolute; inset: -12%; pointer-events: none; }
+.core .cross::before, .core .cross::after { content: ""; position: absolute; background: color-mix(in oklab, var(--c) 18%, transparent); }
+.core .cross::before { left: 50%; top: 0; bottom: 0; width: 1px; mask: linear-gradient(transparent, #000 8%, transparent 30%, transparent 70%, #000 92%, transparent); }
+.core .cross::after { top: 50%; left: 0; right: 0; height: 1px; mask: linear-gradient(90deg, transparent, #000 8%, transparent 30%, transparent 70%, #000 92%, transparent); }
+.core[data-state="processando"] .r7 { border-right-color: var(--c); }
+.core[data-state="processando"] .scan { position: absolute; inset: 8%; border-radius: 9999px; background: conic-gradient(from 0deg, transparent 0 75%, color-mix(in oklab, var(--c) 35%, transparent) 100%); animation: spin 1.4s linear infinite; mask: radial-gradient(circle, transparent 40%, #000 41%); }
+
+@keyframes wave { 0%,100% { transform: scaleY(.25); } 50% { transform: scaleY(1); } }
+.wave span { display: inline-block; width: 2px; border-radius: 2px; background: var(--primary); transform-origin: center; animation: wave 1s ease-in-out infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.caret { animation: blink 1s steps(1) infinite; }
+@keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+.sweep { position: relative; overflow: hidden; }
+.sweep::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, oklch(1 0 0 / 12%), transparent); animation: sweep 2.6s ease-in-out infinite; }
