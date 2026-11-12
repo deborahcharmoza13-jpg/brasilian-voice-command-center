@@ -10,33 +10,102 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ConfiguracoesRouteImport } from './routes/configuracoes'
+import { Route as HistoricoRouteImport } from './routes/historico'
+import { Route as MemoriaRouteImport } from './routes/memoria'
+import { Route as ProjetosRouteImport } from './routes/projetos'
+import { Route as TarefasRouteImport } from './routes/tarefas'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ConfiguracoesRoute = ConfiguracoesRouteImport.update({
+  id: '/configuracoes',
+  path: '/configuracoes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoricoRoute = HistoricoRouteImport.update({
+  id: '/historico',
+  path: '/historico',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MemoriaRoute = MemoriaRouteImport.update({
+  id: '/memoria',
+  path: '/memoria',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProjetosRoute = ProjetosRouteImport.update({
+  id: '/projetos',
+  path: '/projetos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TarefasRoute = TarefasRouteImport.update({
+  id: '/tarefas',
+  path: '/tarefas',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/historico': typeof HistoricoRoute
+  '/memoria': typeof MemoriaRoute
+  '/projetos': typeof ProjetosRoute
+  '/tarefas': typeof TarefasRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/historico': typeof HistoricoRoute
+  '/memoria': typeof MemoriaRoute
+  '/projetos': typeof ProjetosRoute
+  '/tarefas': typeof TarefasRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/configuracoes': typeof ConfiguracoesRoute
+  '/historico': typeof HistoricoRoute
+  '/memoria': typeof MemoriaRoute
+  '/projetos': typeof ProjetosRoute
+  '/tarefas': typeof TarefasRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/configuracoes'
+    | '/historico'
+    | '/memoria'
+    | '/projetos'
+    | '/tarefas'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/configuracoes'
+    | '/historico'
+    | '/memoria'
+    | '/projetos'
+    | '/tarefas'
+  id:
+    | '__root__'
+    | '/'
+    | '/configuracoes'
+    | '/historico'
+    | '/memoria'
+    | '/projetos'
+    | '/tarefas'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConfiguracoesRoute: typeof ConfiguracoesRoute
+  HistoricoRoute: typeof HistoricoRoute
+  MemoriaRoute: typeof MemoriaRoute
+  ProjetosRoute: typeof ProjetosRoute
+  TarefasRoute: typeof TarefasRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +117,51 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/configuracoes': {
+      id: '/configuracoes'
+      path: '/configuracoes'
+      fullPath: '/configuracoes'
+      preLoaderRoute: typeof ConfiguracoesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/historico': {
+      id: '/historico'
+      path: '/historico'
+      fullPath: '/historico'
+      preLoaderRoute: typeof HistoricoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/memoria': {
+      id: '/memoria'
+      path: '/memoria'
+      fullPath: '/memoria'
+      preLoaderRoute: typeof MemoriaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/projetos': {
+      id: '/projetos'
+      path: '/projetos'
+      fullPath: '/projetos'
+      preLoaderRoute: typeof ProjetosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tarefas': {
+      id: '/tarefas'
+      path: '/tarefas'
+      fullPath: '/tarefas'
+      preLoaderRoute: typeof TarefasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConfiguracoesRoute: ConfiguracoesRoute,
+  HistoricoRoute: HistoricoRoute,
+  MemoriaRoute: MemoriaRoute,
+  ProjetosRoute: ProjetosRoute,
+  TarefasRoute: TarefasRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
