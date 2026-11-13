@@ -101,7 +101,7 @@
 }
 
 /* ---------- Núcleo holográfico ---------- */
-.core { --speed: 1; --c: var(--glow); position: relative; aspect-ratio: 1; width: 100%; }
+.core { --speed: 1; --c: var(--glow); position: relative; aspect-ratio: 1; width: 100%; container-type: inline-size; isolation: isolate; }
 .core[data-state="ouvindo"] { --speed: 0.5; --c: oklch(0.85 0.15 175); }
 .core[data-state="processando"] { --speed: 0.25; --c: oklch(0.78 0.16 250); }
 .core[data-state="falando"] { --speed: 0.6; --c: oklch(0.88 0.13 200); }
@@ -159,9 +159,28 @@
   &:hover { transform: translateY(-2px); border-color: color-mix(in oklab, var(--primary) 35%, transparent); box-shadow: 0 30px 60px -30px oklch(0 0 0 / 80%), 0 0 0 1px color-mix(in oklab, var(--primary) 10%, transparent), 0 0 40px -20px var(--glow); } }
 
 /* ---------- Núcleo: camadas extras ---------- */
-.core .vol { position: absolute; inset: -18%; border-radius: 9999px; background: radial-gradient(circle, color-mix(in oklab, var(--c) 22%, transparent) 0%, transparent 60%); filter: blur(20px); transition: background .8s; animation: breathe 5s ease-in-out infinite; }
+.core .vol { position: absolute; inset: -12%; border-radius: 9999px; background: radial-gradient(circle, color-mix(in oklab, var(--c) 22%, transparent) 0%, transparent 65%); transition: opacity .8s; animation: breathe 5s ease-in-out infinite; }
 .core[data-state="ouvindo"] .vol { animation-duration: 1.6s; }
 .core[data-state="falando"] .vol { animation: speak .45s ease-in-out infinite alternate; }
+.core[data-state="processando"] .vol { animation: flicker .9s ease-in-out infinite; }
+.core .neural-sphere {
+  position: absolute; inset: 11%; overflow: hidden; border-radius: 50%;
+  border: 1px solid color-mix(in oklab, var(--c) 30%, transparent);
+  background: radial-gradient(circle at 38% 30%, color-mix(in oklab, var(--c) 10%, transparent), transparent 55%);
+  box-shadow: inset 0 0 28px color-mix(in oklab, var(--c) 12%, transparent);
+  transition: opacity .7s; opacity: .65;
+}
+.core .neural-lattice {
+  position: absolute; inset: -15%; border-radius: 50%;
+  background: repeating-radial-gradient(ellipse at center, transparent 0 12px, color-mix(in oklab, var(--c) 18%, transparent) 13px, transparent 14px 25px);
+  transform: scaleX(.72); animation: neural-turn calc(48s * var(--speed)) linear infinite;
+}
+.core .neural-lattice-back { inset: 0; opacity: .5; animation-direction: reverse; }
+.core .neural-equator { position: absolute; inset: 30% -5%; border: 1px solid color-mix(in oklab, var(--c) 30%, transparent); border-radius: 50%; transform: rotate(-28deg); }
+@keyframes neural-turn { from { transform: rotate(0deg) scaleX(.72); } to { transform: rotate(360deg) scaleX(.72); } }
+.core[data-state="processando"] .neural-sphere, .core[data-state="falando"] .neural-sphere { opacity: 1; }
+.core[data-state="processando"] .orb, .core[data-state="falando"] .orb { box-shadow: 0 0 75px color-mix(in oklab, var(--c) 65%, transparent), inset 0 0 35px var(--c); }
+@media (max-width: 639px) { .core .particle:nth-of-type(n+25) { display: none; } .core .neural-lattice-back { display: none; } }
 .core .r5 { inset: -7%; border: 1px solid color-mix(in oklab, var(--c) 12%, transparent); }
 .core .r5::before { content: ""; position: absolute; top: 50%; left: -3px; width: 5px; height: 5px; border-radius: 9999px; background: var(--c); box-shadow: 0 0 10px var(--c); }
 .core .r5 { animation: spin calc(24s * var(--speed)) linear infinite; }

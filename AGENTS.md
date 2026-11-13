@@ -31,3 +31,4 @@ use the editor.
 
 - Keep prototype state in the shared React provider or page-local state; session-only simulation avoids real integrations.
 - Use shared Workspace readings and section labels for secondary screens, and semantic Button variants for controls, to keep the command-center visual language consistent.
+- Render neural-core motion with CSS transforms and opacity, using container-relative particle radii and fewer mobile layers, to avoid a per-frame JavaScript render loop.
