@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactNode } from "react";
 import { LayoutDashboard, FolderKanban, ListChecks, Brain, History, Settings, Menu, X } from "lucide-react";
 import { useJarvis, type Engine } from "@/lib/jarvis-store";
 import { stateLabel } from "./Core";
+import { Button } from "@/components/ui/button";
 
 const nav = [
   { to: "/", label: "Central", code: "01", icon: LayoutDashboard },
@@ -28,13 +29,13 @@ function Clock() {
 export function EngineSwitch() {
   const { engine, setEngine } = useJarvis();
   return (
-    <div className="relative flex items-center rounded-full border border-border bg-background/60 p-0.5 text-xs" role="radiogroup" aria-label="Mecanismo (demonstração)">
+    <div className="relative flex w-fit shrink-0 items-center self-start rounded-full border border-border bg-background/60 p-0.5 text-xs" role="radiogroup" aria-label="Mecanismo (demonstração)">
       <span className={`absolute inset-y-0.5 left-0.5 w-[calc(50%-2px)] rounded-full bg-gradient-to-r from-primary/25 to-primary/5 ring-1 ring-primary/50 shadow-[0_0_16px_-4px_var(--color-glow)] transition-transform duration-500 ease-[cubic-bezier(.2,.8,.2,1)] ${engine === "Qwen" ? "translate-x-full" : ""}`} />
       {(["Gemini", "Qwen"] as Engine[]).map((e) => (
-        <button key={e} role="radio" aria-checked={engine === e} onClick={() => setEngine(e)}
-          className={`relative z-10 flex w-[4.5rem] items-center justify-center gap-1.5 rounded-full py-1.5 font-mono text-[0.68rem] uppercase tracking-wider transition-colors ${engine === e ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>
+        <Button variant="ghost" key={e} role="radio" aria-checked={engine === e} onClick={() => setEngine(e)}
+          className={`relative z-10 flex h-7 w-[4.5rem] items-center justify-center gap-1.5 rounded-full px-0 py-1.5 font-mono text-[0.68rem] uppercase tracking-wider transition-colors hover:bg-transparent ${engine === e ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}>
           <span className={`h-1 w-1 rounded-full ${engine === e ? "bg-primary" : "bg-muted-foreground/50"}`} />{e}
-        </button>
+        </Button>
       ))}
     </div>
   );
@@ -62,7 +63,7 @@ export function Shell({ children }: { children: ReactNode }) {
                 <div className="micro mt-0.5 !text-[0.5rem]">Centro de comando · v0.9</div>
               </div>
             </div>
-            <button className="lg:hidden" onClick={() => setOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></button>
+            <Button variant="ghost" size="icon" className="shrink-0 lg:hidden" onClick={() => setOpen(false)} aria-label="Fechar menu"><X className="h-5 w-5" /></Button>
           </div>
         </div>
         <div className="hairline mx-6 mb-4" />
@@ -96,7 +97,7 @@ export function Shell({ children }: { children: ReactNode }) {
 
       <div className="relative z-10 flex min-w-0 flex-1 flex-col lg:pl-64">
         <header className="sticky top-0 z-20 flex h-16 items-center gap-4 border-b border-border bg-background/50 px-4 backdrop-blur-2xl md:px-8">
-          <button className="lg:hidden" onClick={() => setOpen(true)} aria-label="Abrir menu"><Menu className="h-5 w-5" /></button>
+          <Button variant="ghost" size="icon" className="shrink-0 lg:hidden" onClick={() => setOpen(true)} aria-label="Abrir menu"><Menu className="h-5 w-5" /></Button>
           <Clock />
           <div className="ml-auto flex items-center gap-5">
             <div className="hidden items-center gap-2.5 sm:flex">
@@ -118,7 +119,7 @@ export function PageTitle({ kicker, title, sub, children }: { kicker: string; ti
     <div className="mb-10 flex flex-wrap items-end justify-between gap-6 rise">
       <div>
         <div className="mb-3 flex items-center gap-3"><span className="h-px w-8 bg-primary" /><span className="micro !text-primary">{kicker}</span></div>
-        <h1 className="text-3xl font-extralight tracking-tight md:text-[2.6rem] md:leading-tight">{title}</h1>
+        <h1 className="text-3xl font-extralight md:text-[2.6rem] md:leading-tight">{title}</h1>
         {sub && <p className="mt-2 max-w-xl text-sm text-muted-foreground">{sub}</p>}
       </div>
       {children}

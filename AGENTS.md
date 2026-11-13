@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Keep prototype state in the shared React provider or page-local state; session-only simulation avoids real integrations.
+- Use shared Workspace readings and section labels for secondary screens, and semantic Button variants for controls, to keep the command-center visual language consistent.

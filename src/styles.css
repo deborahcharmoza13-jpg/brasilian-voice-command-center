@@ -183,3 +183,39 @@
 @keyframes sweep { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
 .sweep { position: relative; overflow: hidden; }
 .sweep::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, oklch(1 0 0 / 12%), transparent); animation: sweep 2.6s ease-in-out infinite; }
+
+/* Secondary workspaces: signal diagrams, not decorative cards. */
+:root {
+  --mission-grid: color-mix(in oklab, var(--primary) 12%, transparent);
+  --mission-surface: color-mix(in oklab, var(--petrol) 18%, var(--background));
+  --mission-signal: color-mix(in oklab, var(--violet) 20%, transparent);
+}
+.mission-visual {
+  position: relative; height: 180px; display: flex; align-items: center; justify-content: center;
+  border-bottom: 1px solid var(--border); background-color: var(--mission-surface);
+  background-image: linear-gradient(var(--mission-grid) 1px, transparent 1px), linear-gradient(90deg, var(--mission-grid) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+.mission-signal::before, .mission-signal::after {
+  content: ""; position: absolute; width: 220px; height: 90px;
+  border: 1px solid var(--mission-signal); border-radius: 50%; transform: rotate(-15deg);
+}
+.mission-signal::after { width: 290px; height: 120px; transform: rotate(15deg); }
+.mission-code::before, .mission-code::after {
+  content: ""; position: absolute; width: 170px; height: 110px;
+  border: 1px solid var(--mission-grid); transform: skewY(-10deg);
+}
+.mission-code::after { width: 230px; height: 140px; transform: skewY(10deg); }
+.settings-spectrum {
+  background-image: repeating-linear-gradient(90deg, transparent 0 11px, var(--mission-grid) 11px 12px);
+  background-color: var(--mission-surface);
+}
+.atmos { overflow-x: clip; }
+input, textarea { min-width: 0; }
+@media (max-width: 639px) {
+  .mission-visual { height: 150px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise, .wave span, .caret, .sweep::after { animation: none; }
+  .lift:hover { transform: none; }
+}

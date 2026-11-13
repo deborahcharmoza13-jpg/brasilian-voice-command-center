@@ -4,6 +4,7 @@ import { Mic, ArrowUp, Check, ArrowUpRight } from "lucide-react";
 import { useJarvis, type CoreState } from "@/lib/jarvis-store";
 import { HoloCore, stateLabel } from "@/components/jarvis/Core";
 import { DemoTag } from "@/components/jarvis/Shell";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({ meta: [{ title: "Central — JARVIS (Protótipo)" }, { name: "description", content: "Central do assistente JARVIS com núcleo holográfico e console de comunicação simulado." }, { property: "og:title", content: "Central — JARVIS" }, { property: "og:description", content: "Núcleo holográfico e console de comunicação simulado." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
@@ -44,12 +45,12 @@ function Central() {
 
         {/* Núcleo com leituras orbitais */}
         <div className="relative mx-auto my-10 w-full max-w-[640px]">
-          <div className="relative mx-auto w-[min(78vw,440px)]"><HoloCore state={core} /></div>
+          <div className="relative mx-auto w-full max-w-[440px] px-5"><HoloCore state={core} /></div>
           <Readout label="Conexão" value="Estável · demo" className="left-0 top-[8%]" />
           <Readout label="Motor ativo" value={engine} className="right-0 top-[8%] text-right" />
           <Readout label="Latência (fictícia)" value={latency[core]} className="bottom-[8%] left-0" />
           <Readout label="Canal" value="Texto · voz demo" className="bottom-[8%] right-0 text-right" />
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 translate-y-[calc(min(39vw,220px)+1.5rem)] text-center">
+          <div className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-center">
             <div className="font-mono text-[0.7rem] uppercase tracking-[0.4em] text-primary glow-text">{stateLabel[core]}</div>
           </div>
         </div>
@@ -58,15 +59,15 @@ function Central() {
         <div className="mb-8 mt-6 flex flex-col items-center gap-4">
           <div className="flex flex-wrap justify-center gap-1 rounded-full border border-border bg-background/40 p-1 backdrop-blur">
             {order.map((s, i) => (
-              <button key={s} onClick={() => setCore(s)} className={`rounded-full px-3.5 py-1.5 font-mono text-[0.65rem] uppercase tracking-wider transition-all duration-300 ${core === s ? "bg-primary/15 text-primary shadow-[inset_0_0_0_1px_var(--color-primary)]" : "text-muted-foreground hover:text-foreground"}`}>
+              <Button variant="ghost" key={s} onClick={() => setCore(s)} className={`h-8 rounded-full px-3.5 py-1.5 font-mono text-[0.65rem] uppercase tracking-wider transition-all duration-300 hover:bg-primary/10 ${core === s ? "bg-primary/15 text-primary shadow-[inset_0_0_0_1px_var(--color-primary)]" : "text-muted-foreground hover:text-foreground"}`}>
                 <span className="mr-1.5 opacity-50">0{i + 1}</span>{stateLabel[s]}
-              </button>
+              </Button>
             ))}
           </div>
-          <button onClick={cycle} className="group relative flex items-center gap-3 rounded-full border border-primary/40 bg-gradient-to-b from-primary/20 to-primary/5 py-2.5 pl-3 pr-5 text-sm text-foreground shadow-[0_0_40px_-10px_var(--color-glow)] transition hover:border-primary/70 hover:shadow-[0_0_50px_-6px_var(--color-glow)]">
+          <Button variant="console" onClick={cycle} className="group relative flex h-auto items-center gap-3 rounded-full border border-primary/40 bg-gradient-to-b from-primary/20 to-primary/5 py-2.5 pl-3 pr-5 text-sm text-foreground shadow-[0_0_40px_-10px_var(--color-glow)] transition hover:border-primary/70 hover:shadow-[0_0_50px_-6px_var(--color-glow)]">
             <span className="grid h-7 w-7 place-items-center rounded-full bg-primary text-primary-foreground transition group-hover:scale-110"><Mic className="h-3.5 w-3.5" /></span>
             Ativar voz <span className="micro">demo</span>
-          </button>
+          </Button>
           <p className="micro !normal-case !tracking-normal text-center">Nenhum microfone é acessado — apenas alterna o estado visual.</p>
         </div>
 
@@ -95,7 +96,7 @@ function Central() {
             <span className="font-mono text-sm text-primary">&gt;</span>
             <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Enviar comando simulado ao JARVIS…" className="flex-1 bg-transparent py-1.5 text-sm outline-none placeholder:text-muted-foreground/70" />
             <span className="micro hidden sm:inline">Enter ↵</span>
-            <button aria-label="Enviar" className="grid h-8 w-8 place-items-center rounded-full bg-primary text-primary-foreground transition hover:scale-105 disabled:scale-100 disabled:opacity-30" disabled={!text.trim()}><ArrowUp className="h-4 w-4" /></button>
+            <Button type="submit" size="icon" aria-label="Enviar" className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition hover:scale-105 disabled:scale-100 disabled:opacity-30" disabled={!text.trim()}><ArrowUp className="h-4 w-4" /></Button>
           </form>
         </div>
         <p className="micro mt-3 text-center !normal-case !tracking-normal">Respostas geradas localmente como simulação — nenhuma IA real é chamada.</p>
