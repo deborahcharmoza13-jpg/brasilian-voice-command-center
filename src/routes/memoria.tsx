@@ -1,34 +1,18 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Check, X, Pencil, RotateCcw, FileText, Save } from "lucide-react";
-import { useJarvis, type Memory } from "@/lib/jarvis-store";
-import { PageTitle, DemoTag } from "@/components/jarvis/Shell";
-import { Button } from "@/components/ui/button";
-import { Workspace, Readings, SectionLabel } from "@/components/jarvis/Workspace";
-
-export const Route = createFileRoute("/memoria")({
-  head: () => ({ meta: [{ title: "Memória — JARVIS (Protótipo)" }, { name: "description", content: "Memórias sugeridas pelo JARVIS para aprovar, editar ou rejeitar (demonstração)." }, { property: "og:title", content: "Memória — JARVIS" }, { property: "og:description", content: "Memórias sugeridas pelo JARVIS para aprovar, editar ou rejeitar (demonstração)." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
-  component: Memoria,
-});
-
-const badge: Record<Memory["status"],string>={pendente:"text-warn border-warn/30",aprovada:"text-ok border-ok/30",rejeitada:"text-destructive border-destructive/30"};
+import {createFileRoute} from "@tanstack/react-router";
+import {useState} from "react";
+import {Check,X,Pencil,Save,FileText} from "lucide-react";
+import {useJarvis} from "@/lib/jarvis-store";
+import {PageTitle} from "@/components/jarvis/Shell";
+import {Button} from "@/components/ui/button";
+import {Workspace,Readings,SectionLabel} from "@/components/jarvis/Workspace";
+export const Route=createFileRoute("/memoria")({component:Memoria,head:()=>({meta:[{title:"Memória — JARVIS"}]})});
 function Memoria(){
- const {memories,setMemories,log}=useJarvis();
- const [editing,setEditing]=useState<number|null>(null);
- const [draft,setDraft]=useState("");
- const set=(id:number,patch:Partial<Memory>)=>setMemories(m=>m.map(x=>x.id===id ? {...x,...patch} : x));
- return <Workspace>
-  <PageTitle kicker="04 / Contexto pessoal" title="Memória"><DemoTag>Memórias fictícias</DemoTag></PageTitle>
-  <Readings items={[{label:"Registros",value:memories.length},{label:"Aguardando revisão",value:memories.filter(m=>m.status==="pendente").length,tone:"warn"},{label:"Aprovados",value:memories.filter(m=>m.status==="aprovada").length,tone:"ok"},{label:"Armazenamento",value:"SESSÃO"}]} />
-  <SectionLabel code="M / 01" detail="Arquivo de conhecimento">Registros de contexto</SectionLabel>
-  <div className="grid gap-x-8 lg:grid-cols-2">{memories.map(m=><article key={m.id} className={`relative border-b border-border py-6 rise ${m.status==="rejeitada" ? "opacity-60" : ""}`}>
-    <div className="mb-5 flex items-center gap-3"><FileText className="h-4 w-4 text-primary" strokeWidth={1.3}/><span className="micro">MEM / {String(m.id).padStart(3,"0")}</span><span className={`ml-auto border px-2 py-1 font-mono text-[0.6rem] uppercase ${badge[m.status]}`}>{m.status}</span></div>
-    {editing===m.id ? <textarea aria-label="Editar memória" autoFocus value={draft} onChange={e=>setDraft(e.target.value)} rows={3} className="w-full resize-none rounded-sm bg-secondary/40 p-3 text-sm outline-none ring-1 ring-primary/40"/> : <p className="min-h-16 border-l border-primary/30 pl-4 text-base font-light leading-relaxed">{m.text}</p>}
-    <div className="mt-5 flex flex-wrap gap-2">{editing===m.id ? <><Button size="sm" variant="console" onClick={()=>{set(m.id,{text:draft});setEditing(null);log("Memória editada");}}><Save/>Salvar</Button><Button size="sm" variant="tool" onClick={()=>setEditing(null)}>Cancelar</Button></> : <>
-      {m.status==="pendente"&&<Button size="sm" variant="tool" className="border-ok/30 text-ok hover:bg-ok/10 hover:text-ok" onClick={()=>{set(m.id,{status:"aprovada"});log("Memória aprovada");}}><Check/>Aprovar</Button>}
-      <Button size="sm" variant="tool" onClick={()=>{setEditing(m.id);setDraft(m.text);}}><Pencil/>Editar</Button>
-      {m.status==="pendente" ? <Button size="icon" variant="tool" className="h-8 w-8 hover:bg-destructive/10 hover:text-destructive" title="Rejeitar memória" aria-label="Rejeitar" onClick={()=>{set(m.id,{status:"rejeitada"});log("Memória rejeitada");}}><X/></Button> : <Button size="sm" variant="tool" onClick={()=>set(m.id,{status:"pendente"})}><RotateCcw/>Desfazer</Button>}
-    </>}</div>
-  </article>)}</div>
- </Workspace>;
+ const {memories,approveMemory,rejectMemory,editMemory,suggestMemory,connected,loading,error}=useJarvis();
+ const [draft,setDraft]=useState(""),[editing,setEditing]=useState<number|null>(null),[editText,setEditText]=useState(""),[busy,setBusy]=useState(false),[notice,setNotice]=useState("");
+ async function act(fn:()=>Promise<void>,ok:string){setBusy(true);setNotice("");try{await fn();setNotice(ok);}catch(e){setNotice(e instanceof Error?e.message:"Operação não concluída.");}finally{setBusy(false);}}
+ return <Workspace><PageTitle kicker="04 / Contexto pessoal" title="Memória"/><Readings items={[{label:"Registros",value:memories.length},{label:"Pendentes",value:memories.filter(m=>m.status==="pendente").length,tone:"warn"},{label:"Aprovados",value:memories.filter(m=>m.status==="aprovada").length,tone:"ok"},{label:"Origem",value:"BANCO REAL"}]}/>
+ <form className="flex flex-col gap-3 border-b border-primary/40 bg-primary/5 p-4" onSubmit={e=>{e.preventDefault();void act(async()=>{if(!draft.trim())return;await suggestMemory(draft.trim());setDraft("");},"Sugestão enviada para revisão.");}}><SectionLabel code="M / 00">Propor nova memória</SectionLabel><textarea value={draft} onChange={e=>setDraft(e.target.value)} rows={2} placeholder="O que o JARVIS deveria lembrar?" className="w-full resize-y bg-transparent text-sm outline-none"/><div><Button size="sm" variant="console" type="submit" disabled={!connected||busy||!draft.trim()}>Enviar para revisão</Button></div></form>
+ {notice&&<p role="status" className="py-3 text-sm text-primary">{notice}</p>}{error&&<p role="alert" className="py-2 text-sm text-destructive">{error}</p>}
+ <SectionLabel code="M / 01" detail="Aprovação explícita">Registros de contexto</SectionLabel><div className="grid gap-x-8 lg:grid-cols-2">{memories.map(m=><article key={m.id} className="border-b border-border py-6"><div className="mb-4 flex items-center gap-3"><FileText className="h-4 w-4 text-primary"/><span className="micro">MEM / {m.id}</span><span className="ml-auto micro">{m.status.toUpperCase()}</span></div>{editing===m.id?<textarea value={editText} onChange={e=>setEditText(e.target.value)} rows={3} className="w-full bg-secondary/40 p-3 text-sm outline-none"/>:<p className="border-l border-primary/30 pl-4 text-sm leading-relaxed">{m.text}</p>}
+ <div className="mt-4 flex flex-wrap gap-2">{editing===m.id?<><Button size="sm" variant="console" disabled={busy||!connected||!editText.trim()} onClick={()=>void act(async()=>{await editMemory(m.id,editText.trim());setEditing(null);},"Memória editada.")}><Save/>Salvar</Button><Button size="sm" variant="tool" onClick={()=>setEditing(null)}>Cancelar</Button></>:<>{m.status==="pendente"&&<Button size="sm" variant="tool" disabled={busy||!connected} onClick={()=>void act(()=>approveMemory(m.id),"Memória aprovada no servidor.")}><Check/>Aprovar</Button>}<Button size="sm" variant="tool" disabled={busy||!connected} onClick={()=>{setEditing(m.id);setEditText(m.text);}}><Pencil/>Editar</Button>{m.status==="pendente"&&<Button size="sm" variant="tool" disabled={busy||!connected} onClick={()=>void act(()=>rejectMemory(m.id),"Sugestão rejeitada.")}><X/>Rejeitar</Button>}</>}</div></article>)}{!memories.length&&<p className="py-10 text-sm text-muted-foreground">{loading?"Carregando memórias…":"Nenhuma memória retornada pelo servidor."}</p>}</div><p className="micro mt-4">Aprovar uma sugestão grava a memória persistente. A aprovação só ocorre após seu clique explícito.</p></Workspace>;
 }
