@@ -44,7 +44,7 @@ export function EngineSwitch() {
 export function Shell({ children }: { children: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
-  const { settings, core, engine, tasks } = useJarvis();
+  const { settings, core, engine, tasks, connected, loading } = useJarvis();
   useEffect(() => setOpen(false), [path]);
   const pending = tasks.filter((t) => !t.done).length;
   return (
@@ -101,8 +101,8 @@ export function Shell({ children }: { children: ReactNode }) {
           <Clock />
           <div className="ml-auto flex items-center gap-5">
             <div className="hidden items-center gap-2.5 sm:flex">
-              <span className="relative flex h-2 w-2"><span className="absolute inset-0 animate-ping rounded-full bg-ok/60" /><span className="relative h-2 w-2 rounded-full bg-ok" /></span>
-              <span className="micro !text-foreground/80">Online</span><span className="micro">· simulado</span>
+              <span className={`h-2 w-2 rounded-full ${connected ? "bg-ok" : "bg-warn"}`} />
+              <span className="micro !text-foreground/80">{loading ? "Verificando" : connected ? "Backend local" : "Desconectado"}</span>
             </div>
             <span className="hidden h-6 w-px bg-border sm:block" />
             <EngineSwitch />
