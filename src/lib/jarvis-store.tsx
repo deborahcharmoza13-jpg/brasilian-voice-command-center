@@ -9,7 +9,7 @@ export type Activity={text:string;time:string};
 export type Settings={theme:"Ciano"|"Azul elétrico"|"Âmbar";sound:boolean;volume:number;listen:"Manual"|"Pressionar para falar"|"Palavra de ativação"};
 const now=()=>new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 const priority=(p?:string):Task["priority"]=>{const v=(p||"").toLowerCase();return v.includes("alta")?"alta":v.includes("baixa")?"baixa":"média";};
-const rowText=(m:any)=>String(m?.informacao??m?.conteudo??m?.texto??(Array.isArray(m)?m.slice(1).join(" — "):JSON.stringify(m)));
+const rowText=(m:any)=>String(m?.informacao??m?.conteudo??m?.texto??(Array.isArray(m)?(m[2]??m[1]??""):JSON.stringify(m)));
 const rowId=(m:any,i:number)=>Number(m?.id??(Array.isArray(m)?m[0]:i+1));
 function useJarvisState(){
  const [core,setCore]=useState<CoreState>("repouso"),[engine,setEngineState]=useState<Engine>("Gemini");
